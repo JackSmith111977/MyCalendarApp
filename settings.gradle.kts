@@ -23,3 +23,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyCalendarApp"
 include(":app")
+include(":feature:calendar")
+include(":feature:event")
+include(":feature:alarm")
+include(":data")
+include(":core")
