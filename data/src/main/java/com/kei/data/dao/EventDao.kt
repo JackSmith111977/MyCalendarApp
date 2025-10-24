@@ -29,7 +29,7 @@ interface EventDao {
      * @param event 要插入的事件实体
      * @return 插入事件的ID
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)// 当插入数据发生冲突时（如主键重复），采用替换策略，即删除旧数据并插入新数据
     suspend fun insertEvent(event: EventEntity): Long
 
     /**
