@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    月视图 Fragment 的布局文件
+    使用 KizitoNwose CalendarView 显示完整的月份日历
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <!-- 月视图日历控件，用于显示整个月份的日期 -->
+    <com.kizitonwose.calendar.view.CalendarView
+        android:id="@+id/month_calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cv_dayViewResource="@layout/calendar_day_layout"/>
+
+</LinearLayout>

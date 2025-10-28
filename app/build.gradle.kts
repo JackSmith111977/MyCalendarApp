@@ -47,6 +47,10 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -58,6 +62,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,4 +85,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.navigation.ui.ktx)
     kapt(libs.room.compiler)
+
+    implementation(libs.kizitonwose.calendar)
+    implementation(libs.viewpager2)
 }

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.kei.mycalendarapp.data.local.entity.CalendarEvent
+import com.kei.mycalendarapp.data.local.EventDao
 
 
 /**

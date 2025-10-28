@@ -6,7 +6,6 @@ constraintlayout = "2.1.4"
 lifecycle = "2.9.4"
 room = "2.8.3"
 navigation = "2.7.5"
-calendar = "2.5.1"
 kotlin = "2.2.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -15,6 +14,9 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2024.09.00"
+activity = "1.11.0"
+kizitonwose-calendar = "2.9.0"
+viewpager2 = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,7 +49,9 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
 
-calendar = { group = "com.kizitonwose.calendar", name = "calendar", version.ref = "calendar"}
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+kizitonwose-calendar = { module = "com.kizitonwose.calendar:view", version.ref = "kizitonwose-calendar" }
+viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    周视图 Fragment 的布局文件
+    使用 Kizitonwose WeekCalendarView 显示一周的日历视图
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <!-- 周视图日历控件，用于显示一周的日期 -->
+    <com.kizitonwose.calendar.view.WeekCalendarView
+        android:id="@+id/week_calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cv_dayViewResource="@layout/calendar_day_layout"/>
+
+</LinearLayout>

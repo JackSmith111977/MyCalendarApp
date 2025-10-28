@@ -11,12 +11,20 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * 深色主题的颜色方案
+ * 定义了在深色模式下使用的主要颜色、次要颜色和第三级颜色
+ */
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
+/**
+ * 浅色主题的颜色方案
+ * 定义了在浅色模式下使用的主要颜色、次要颜色和第三级颜色
+ */
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
@@ -33,6 +41,14 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+/**
+ * 应用程序的主题包装函数
+ * 根据系统主题和动态颜色设置来应用适当的颜色方案
+ *
+ * @param darkTheme 是否使用深色主题，默认根据系统设置决定
+ * @param dynamicColor 是否使用动态颜色（Android 12+ 可用），默认为 true
+ * @param content 要应用主题的内容
+ */
 @Composable
 fun MyCalendarAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
