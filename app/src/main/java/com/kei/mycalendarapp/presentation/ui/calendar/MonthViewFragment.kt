@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.kei.mycalendarapp.databinding.FragmentMonthViewBinding
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -59,7 +60,18 @@ class MonthViewFragment : Fragment() {
         val endMonth = currentMonth.plusMonths(100)
         val firstDayOfWeek = firstDayOfWeekFromLocale()
 
-        binding.monthCalendarView.dayBinder = MonthDayViewBinder()
+        // 步骤3：在Fragment中设置点击回调
+        val monthDayViewBinder = MonthDayViewBinder()
+        monthDayViewBinder.onDateClickListener = { calendarDay ->
+            // 处理点击事件
+            Toast.makeText(context, "Clicked: ${calendarDay.date}", Toast.LENGTH_SHORT).show()
+            // 更新选中日期的视觉效果
+            monthDayViewBinder.selectDate(calendarDay.date)
+            // 通知日历重新绘制以更新选中状态
+            binding.monthCalendarView.notifyCalendarChanged()
+        }
+
+        binding.monthCalendarView.dayBinder = monthDayViewBinder
         // 配置月日历的显示范围和起始星期
         binding.monthCalendarView.setup(startMonth, endMonth, firstDayOfWeek)
         binding.monthCalendarView.scrollToMonth(currentMonth)

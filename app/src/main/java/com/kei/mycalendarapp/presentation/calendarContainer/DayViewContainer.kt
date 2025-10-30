@@ -16,6 +16,11 @@ class DayViewContainer(view: View) : ViewContainer(view) {
      * 日期格子中显示日期数字的 TextView
      */
     val textView: TextView = view.findViewById<TextView>(R.id.calendarDayText)
+    
+    // 添加一个函数来设置点击监听器
+    fun setOnClickListener(listener: (View) -> Unit) {
+        textView.setOnClickListener(listener)
+    }
 
     // With ViewBinding
     // val textView = CalendarDayLayoutBinding.bind(view).calendarDayText

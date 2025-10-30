@@ -10,6 +10,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/titlesContainer"
+        layout="@layout/calendar_day_titles_container" />
+
     <!-- 周视图日历控件，用于显示一周的日期 -->
     <com.kizitonwose.calendar.view.WeekCalendarView
         android:id="@+id/week_calendar_view"

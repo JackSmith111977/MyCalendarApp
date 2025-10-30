@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.kei.mycalendarapp.R
 import com.kei.mycalendarapp.databinding.FragmentDayViewBinding
@@ -59,12 +60,6 @@ class DayViewFragment: Fragment() {
         val currentDate = LocalDate.now()
         // 设置日视图头部显示的日期文本
         binding.dayHeaderText.text = DateTimeFormatter.ofPattern("yyyy年MM月dd日").format(currentDate)
-
-        // TODO: 这里将实现具体的日视图逻辑
-
-
-
-
     }
 
     /**

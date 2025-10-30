@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 添加现代化的洋红色调 -->
+    <color name="magenta_500">#E91E63</color>
+    <color name="magenta_700">#C2185B</color>
+    <color name="magenta_200">#F48FB1</color>
 </resources>

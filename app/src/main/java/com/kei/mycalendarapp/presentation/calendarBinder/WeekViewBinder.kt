@@ -1,16 +1,25 @@
 package com.kei.mycalendarapp.presentation.calendarBinder
 
+import android.graphics.Color
 import android.view.View
+import com.kei.mycalendarapp.R
 import com.kei.mycalendarapp.presentation.calendarContainer.DayViewContainer
-import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.WeekDayBinder
+import java.time.LocalDate
 
 /**
  * 周视图的日期绑定器
  * 负责创建和绑定周视图中的日期格子视图
  */
 class WeekViewBinder: WeekDayBinder<DayViewContainer> {
+    var onDateClickListener: ((WeekDay) -> Unit)? = null
+    private var selectedDate: LocalDate? = null
+
+    fun selectDate(date: LocalDate) {
+        selectedDate = date
+    }
+
     /**
      * 创建日期格子的视图容器
      *
@@ -30,5 +39,22 @@ class WeekViewBinder: WeekDayBinder<DayViewContainer> {
         data: WeekDay
     ) {
         container.textView.text = data.date.dayOfMonth.toString()
+
+        // 设置点击监听器
+        container.setOnClickListener {
+            selectedDate = data.date
+            onDateClickListener?.invoke(data)
+        }
+
+        // 更新选中的视觉效果
+        if (selectedDate == data.date) {
+            container.textView.setBackgroundResource(R.drawable.modern_selected_date_ripple)
+            // 选中日期使用白色文字以便在洋红色背景上清晰可见
+            container.textView.setTextColor(Color.WHITE)
+        } else {
+            container.textView.background = null
+            // 非选中日期使用黑色文字
+            container.textView.setTextColor(Color.BLACK)
+        }
     }
 }
