@@ -48,12 +48,19 @@ class MonthDayViewBinder : MonthDayBinder<MonthDayViewContainer> {
             // 重新绘制日历更新选中的状态
         }
 
+        // 获取今天的日期
+        val today = LocalDate.now()
+
         // 更新选中的视觉效果
         if(selectedDate == data.date){
             container.textView.setBackgroundResource(R.drawable.modern_selected_date_ripple)
             // 选中日期使用白色文字以便在洋红色背景上清晰可见
             container.textView.setTextColor(Color.WHITE)
-        }else{
+        } else if (data.date == today) {
+            // 今天的日期使用与选中日期相同形状的背景高亮显示
+            container.textView.setBackgroundResource(R.drawable.modern_today_background)
+            container.textView.setTextColor(Color.BLACK)
+        } else {
             container.textView.background = null
             // 非选中日期根据是否属于当前月份设置不同的文字颜色
             if (data.position == DayPosition.MonthDate) {

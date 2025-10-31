@@ -18,6 +18,7 @@ class DayViewContainer(view: View) : ViewContainer(view) {
     val textView: TextView = view.findViewById<TextView>(R.id.calendarDayText)
     
     // 添加一个函数来设置点击监听器
+    // lambda表达式，即接收一个名为listener的参数，是以View作为参数，并返回Unit(即无返回值)的函数类型
     fun setOnClickListener(listener: (View) -> Unit) {
         textView.setOnClickListener(listener)
     }
