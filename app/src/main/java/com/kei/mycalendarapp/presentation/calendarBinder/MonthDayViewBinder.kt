@@ -56,10 +56,6 @@ class MonthDayViewBinder : MonthDayBinder<MonthDayViewContainer> {
             container.textView.setBackgroundResource(R.drawable.modern_selected_date_ripple)
             // 选中日期使用白色文字以便在洋红色背景上清晰可见
             container.textView.setTextColor(Color.WHITE)
-        } else if (data.date == today) {
-            // 今天的日期使用与选中日期相同形状的背景高亮显示
-            container.textView.setBackgroundResource(R.drawable.modern_today_background)
-            container.textView.setTextColor(Color.BLACK)
         } else {
             container.textView.background = null
             // 非选中日期根据是否属于当前月份设置不同的文字颜色
@@ -70,6 +66,11 @@ class MonthDayViewBinder : MonthDayBinder<MonthDayViewContainer> {
                 // 非当前月份的日期使用浅色文字
                 container.textView.setTextColor(Color.GRAY)
             }
+        }
+        if (data.date == today && selectedDate != today) {
+            // 今天的日期使用与选中日期相同形状的背景高亮显示
+            container.textView.setBackgroundResource(R.drawable.modern_today_background)
+            container.textView.setTextColor(Color.BLACK)
         }
 
         // 可以在这里添加更多的样式逻辑，例如选中日期的高亮显示等

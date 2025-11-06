@@ -10,6 +10,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <!-- 添加年月标题 -->
+    <TextView
+        android:id="@+id/monthYearHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        tools:text="2023年10月"/>
+
     <include
         android:id="@+id/titlesContainer"
         layout="@layout/calendar_day_titles_container" />
@@ -19,6 +31,7 @@
         android:id="@+id/week_calendar_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cv_dayViewResource="@layout/calendar_day_layout"/>
+        app:cv_dayViewResource="@layout/calendar_day_layout"
+        app:cv_scrollPaged="true"/>
 
 </LinearLayout>

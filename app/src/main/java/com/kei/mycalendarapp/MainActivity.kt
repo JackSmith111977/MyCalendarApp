@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = CalendarViewPagerAdapter(this)
         viewPager.adapter = adapter
+        viewPager.isUserInputEnabled = false
 
         // 将 TabLayout 与 ViewPager 关联，并设置每个标签的文本
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

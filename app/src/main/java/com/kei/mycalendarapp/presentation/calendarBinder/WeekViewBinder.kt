@@ -54,13 +54,14 @@ class WeekViewBinder: WeekDayBinder<DayViewContainer> {
             container.textView.setBackgroundResource(R.drawable.modern_selected_date_ripple)
             // 选中日期使用白色文字以便在洋红色背景上清晰可见
             container.textView.setTextColor(Color.WHITE)
-        } else if (data.date == today) {
-            // 今天的日期使用与选中日期相同形状的背景高亮显示
-            container.textView.setBackgroundResource(R.drawable.modern_today_background)
-            container.textView.setTextColor(Color.BLACK)
-        } else {
+        }  else {
             container.textView.background = null
             // 非选中日期使用黑色文字
+            container.textView.setTextColor(Color.BLACK)
+        }
+        if (data.date == today && selectedDate != today) {
+            // 今天的日期使用与选中日期相同形状的背景高亮显示
+            container.textView.setBackgroundResource(R.drawable.modern_today_background)
             container.textView.setTextColor(Color.BLACK)
         }
     }

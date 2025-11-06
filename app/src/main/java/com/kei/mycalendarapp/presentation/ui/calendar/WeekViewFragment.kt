@@ -5,6 +5,9 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
@@ -28,6 +31,9 @@ import java.util.*
 class WeekViewFragment: Fragment() {
     private var _binding: FragmentWeekViewBinding? = null
     private val binding get() = _binding!!
+
+    // 添加年月标题变量声明
+    private lateinit var monthYearHeader: TextView
 
     /**
      * 创建 Fragment 的视图层次结构
@@ -64,6 +70,9 @@ class WeekViewFragment: Fragment() {
      */
     private fun setupWeekView(){
         val currentDate = LocalDate.now()
+
+        // 初始化年月标题
+        monthYearHeader = binding.root.findViewById<TextView>(R.id.monthYearHeader)
         
         // 步骤3：在Fragment中设置点击回调
         val weekViewBinder = WeekViewBinder()
@@ -78,7 +87,15 @@ class WeekViewFragment: Fragment() {
         
         val weekCalendarView = binding.weekCalendarView
         weekCalendarView.dayBinder = weekViewBinder
-        
+
+        // 添加滚动监听器以同步星期标题
+        weekCalendarView.weekScrollListener = { weekStart ->
+            // 更新星期标题以匹配当前周
+            updateDayOfWeekTitles(weekStart.days.first().date)
+            // 更新年月标题
+            updateMonthYearHeader(weekStart.days.first().date)
+        }
+
         // 获取标题容器并设置星期标题
         setDayOfWeekTitles()
         
@@ -90,7 +107,69 @@ class WeekViewFragment: Fragment() {
         // 配置周日历的显示范围和起始星期
         weekCalendarView.setup(startMonth.atDay(1), endMonth.atEndOfMonth(), firstDayOfWeek)
         weekCalendarView.scrollToWeek(currentDate)
+
+        // 初始化年月标题
+        updateMonthYearHeader(currentDate)
     }
+
+    /**
+     * 更新年月标题
+     *
+     * @param date 当前周的起始日期
+     */
+    private fun updateMonthYearHeader(date: LocalDate) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy年MM月")
+        val monthYearText = date.format(formatter)
+
+        // 如果文本没变化，不更新
+        if (monthYearHeader.text.toString() == monthYearText){
+            return
+        }
+
+        monthYearHeader.text = monthYearText
+    }
+
+    /**
+     * 更新星期标题以匹配指定日期所在的周
+     *
+     * @param date 指定日期，用于计算该日期所在周的起始日期
+     */
+    private fun updateDayOfWeekTitles(date: LocalDate) {
+        // 获取星期标题容器
+        val titlesContainer = binding.root.findViewById<ViewGroup>(R.id.titlesContainer)
+
+        // 计算指定日期所在周的起始日期
+        // 获取本地化的星期起始日（例如在中国是星期一，在美国是星期日）
+        val firstDayOfWeek = firstDayOfWeekFromLocale()
+
+        // 计算逻辑：
+        // 1. date.dayOfWeek.ordinal：获取指定日期是星期几（星期一为0，星期日为6）
+        // 2. date.minusDays(date.dayOfWeek.ordinal.toLong())：从指定日期减去对应的天数，得到该周的星期一
+        // 3. plusDays(firstDayOfWeek.ordinal.toLong())：加上本地化星期起始日的偏移量
+        // 4. minusDays(if (firstDayOfWeek.ordinal <= date.dayOfWeek.ordinal) 0 else 7)：
+        //    如果本地化星期起始日在指定日期的星期几之前或当天，则不需要调整
+        //    否则需要减去7天以得到正确的周起始日
+        val weekStart = date.minusDays(date.dayOfWeek.ordinal.toLong())
+            .plusDays(firstDayOfWeek.ordinal.toLong())
+            .minusDays(if (firstDayOfWeek.ordinal <= date.dayOfWeek.ordinal) 0 else 7)
+
+        // 遍历星期标题容器中的所有子视图并更新文本
+        titlesContainer.children
+            .map { it as TextView }
+            // 为每个星期标题设置对应的星期名称
+            .forEachIndexed { index, textView ->
+                // 计算当前星期标题对应的日期
+                // weekStart是周起始日，加上index天数得到该星期第index+1天的日期
+                val currentDay = weekStart.plusDays(index.toLong())
+
+                // 获取本地化的星期名称（SHORT格式，如"周一"、"Mon"等）
+                val title = currentDay.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+
+                // 设置星期标题文本
+                textView.text = title
+            }
+    }
+
 
     /**
      * 设置星期标题
