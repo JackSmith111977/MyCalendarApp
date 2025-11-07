@@ -81,4 +81,8 @@ class MonthDayViewBinder : MonthDayBinder<MonthDayViewContainer> {
             container.textView.alpha = 0.3f
         }
     }
+
+    fun getSelectedDate(): LocalDate?{
+        return selectedDate
+    }
 }

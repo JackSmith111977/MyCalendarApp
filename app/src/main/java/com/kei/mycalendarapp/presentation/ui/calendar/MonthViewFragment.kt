@@ -85,4 +85,9 @@ class MonthViewFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun getSelectedDate(): LocalDate?{
+        val monthViewBinder = binding.monthCalendarView.dayBinder as? MonthDayViewBinder // 将 dayBinder 安全转换为 MonthDayViewBinder
+        return  monthViewBinder?.getSelectedDate()
+    }
 }

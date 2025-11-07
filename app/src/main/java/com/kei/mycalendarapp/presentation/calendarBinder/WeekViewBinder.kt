@@ -65,4 +65,8 @@ class WeekViewBinder: WeekDayBinder<DayViewContainer> {
             container.textView.setTextColor(Color.BLACK)
         }
     }
+
+    fun getSelectedDate(): LocalDate?{
+        return selectedDate
+    }
 }

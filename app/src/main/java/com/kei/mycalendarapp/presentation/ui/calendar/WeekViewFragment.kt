@@ -197,4 +197,10 @@ class WeekViewFragment: Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun getSelectedDate(): LocalDate?{
+        // 获取 WeekViewBinder 实例并返回其选中的日期
+        val weekViewBinder = binding.weekCalendarView.dayBinder as? WeekViewBinder // 将 dayBinder 安全转换为WeekViewBinder
+        return weekViewBinder?.getSelectedDate()
+    }
 }
