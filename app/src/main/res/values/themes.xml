@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.MyCalendarApp" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="Theme.MyCalendarApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/magenta_500</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryContainer">@color/magenta_700</item>
+        <item name="colorOnPrimaryContainer">@android:color/white</item>
+        <item name="colorSecondary">@color/magenta_200</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorSecondaryContainer">@color/magenta_200</item>
+        <item name="colorOnSecondaryContainer">@android:color/black</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+    </style>
 </resources>

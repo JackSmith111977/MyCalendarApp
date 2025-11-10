@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyCalendarApp</string>
+    <string name="_09_00_10_00">09:00~10:00</string>
 </resources>

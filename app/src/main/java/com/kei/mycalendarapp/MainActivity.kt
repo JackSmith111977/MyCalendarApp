@@ -12,12 +12,23 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
+import com.kei.mycalendarapp.data.local.CalendarDatabase
+import com.kei.mycalendarapp.data.local.entity.CalendarEvent
 import com.kei.mycalendarapp.databinding.ActivityMainBinding
+import com.kei.mycalendarapp.domain.manager.EventColorManager
+import com.kei.mycalendarapp.domain.manager.EventUpdateManager
 import com.kei.mycalendarapp.presentation.ui.calendar.DayViewFragment
 import com.kei.mycalendarapp.presentation.ui.calendar.MonthViewFragment
 import com.kei.mycalendarapp.presentation.ui.calendar.WeekViewFragment
 import com.kei.mycalendarapp.presentation.ui.common.CalendarViewPagerAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
@@ -96,13 +107,117 @@ class MainActivity : AppCompatActivity() {
             val reminder = editTextReminder.text.toString()
 
             // 处理添加事件逻辑
-            Toast.makeText(this, "日程已添加", Toast.LENGTH_SHORT).show()
+            // 1. 验证必填字段
+            if (title.isEmpty()){
+                editTextTitle.error = "请输入日程标题"
+                return@setOnClickListener
+            }
+
+            if (date.isEmpty()){
+                editTextDate.error = "请选择日程日期"
+                return@setOnClickListener
+            }
+
+            // 2. 保存事件到数据库
+            saveEventToDatabase(title, date, content, reminder)
+
+            // 3. 关闭对话框
             dialog.dismiss()
         }
 
         // 显示对话框
         dialog.show()
     }
+
+    private fun saveEventToDatabase(
+        title: String,
+        date: String,
+        content: String,
+        reminder: String
+    ){
+        // 在后台线程中执行数据库操作
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // 解析日期
+                val dateFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日")
+                val localDate = LocalDate.parse(date, dateFormatter)
+
+                // 开始时间和结束时间
+                val startTime = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                val endTime = localDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+                // 解析提醒时间
+                val reminderTime = if (reminder.isNotEmpty()){
+                    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                    val localTime = LocalTime.parse(reminder, timeFormatter)
+                    val reminderDateTime = localDate.atTime(localTime)
+                    reminderDateTime.atZone((ZoneId.systemDefault())).toInstant().toEpochMilli()
+                } else {
+                    0L // 无提醒
+                }
+
+                // 创建颜色管理器实例
+                val colorManager = EventColorManager()
+
+                // 获取当天事件已有的颜色
+                val existingColors = getExistingEventColorsForDate(getSelectedDate())
+
+                // 为新事件选择颜色
+                val eventColor = colorManager.getColorForEvent(existingColors)
+
+                // 创建CalendarEvent对象
+                val event = CalendarEvent(
+                    title = title,
+                    content = content,
+                    startTime = startTime,
+                    endTime = endTime,
+                    eventColor = eventColor,
+                    reminderTime = reminderTime,
+                    isCompleted = false
+                )
+
+                // 获取数据库实例并插入事件
+                val database = CalendarDatabase.getInstance(this@MainActivity)
+                val eventId = database.eventDao().insertEvent(event)
+
+                // 在主线程中显示成功消息
+                withContext(Dispatchers.Main){
+                    Toast.makeText(this@MainActivity, "日程已添加，ID：$eventId", Toast.LENGTH_SHORT).show()
+
+                    // 通知日程列表刷新
+                    EventUpdateManager.getInstance().notifyEventAdded()
+
+                }
+
+            } catch (e: Exception){
+                // 在主线程中显示错误信息
+                withContext(Dispatchers.Main){
+                    Toast.makeText(this@MainActivity, "添加日程失败：${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private suspend fun CoroutineScope.getExistingEventColorsForDate(selectedDate: LocalDate?): List<Int> {
+        // 1. 检查日期是否为空
+        if (selectedDate == null){
+            return emptyList()
+        }
+
+        // 2. 计算时间范围
+        val startOfDay = selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endOfDay = selectedDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        // 3. 查询数据库获取指定日期的所有事件
+        val database = CalendarDatabase.getInstance(this@MainActivity)
+        val events = async {
+            database.eventDao().getEventsInRange(startOfDay, endOfDay)
+        }.await()
+
+        // 4. 提取事件颜色
+        return events.map { it.eventColor }
+    }
+
 
     private fun showTimePicker(editTextReminder: TextInputEditText) {
         val timePicker = TimePickerDialog(

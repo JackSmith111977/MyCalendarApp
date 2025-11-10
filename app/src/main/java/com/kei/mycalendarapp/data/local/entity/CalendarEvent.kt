@@ -18,8 +18,10 @@ data class CalendarEvent (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val title: String,
+    val content: String,
     val startTime: Long,
     val endTime: Long,
     val eventColor: Int,
-    val reminderTime: Long = 0
+    val reminderTime: Long = 0,
+    val isCompleted: Boolean = false
 )

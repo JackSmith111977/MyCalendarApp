@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.kei.mycalendarapp.data.local.entity.CalendarEvent
 import com.kei.mycalendarapp.data.local.EventDao
 
@@ -17,7 +19,7 @@ import com.kei.mycalendarapp.data.local.EventDao
  */
 @Database(
     entities = [CalendarEvent::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class CalendarDatabase : RoomDatabase() {
@@ -32,6 +34,15 @@ abstract class CalendarDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: CalendarDatabase? = null
 
+        // 数据库迁移
+        val MIGRATION_1_2 = object : Migration(1, 2){
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // 为新字段添加列
+                db.execSQL("ALTER TABLE calendar_events ADD COLUMN content TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE calendar_events ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         /**
          * 获取CalendarDatabase的单例实例
          *
@@ -44,7 +55,9 @@ abstract class CalendarDatabase : RoomDatabase() {
                     context.applicationContext,
                     CalendarDatabase::class.java,
                     "calendar_database"
-                ).build()
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
                 INSTANCE = instance
                 instance
             }

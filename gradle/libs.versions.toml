@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.0"
 appcompat = "1.6.1"
+localbroadcastmanager = "1.1.0"
 material = "1.11.0"
 constraintlayout = "2.1.4"
 lifecycle = "2.9.4"
@@ -20,6 +21,7 @@ viewpager2 = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-localbroadcastmanager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "localbroadcastmanager" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -52,6 +54,8 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 kizitonwose-calendar = { module = "com.kizitonwose.calendar:view", version.ref = "kizitonwose-calendar" }
 viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+
+local-broadcast-manager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "localbroadcastmanager" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

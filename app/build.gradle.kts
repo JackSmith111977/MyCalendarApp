@@ -88,4 +88,6 @@ dependencies {
 
     implementation(libs.kizitonwose.calendar)
     implementation(libs.viewpager2)
+
+    implementation(libs.androidx.localbroadcastmanager)
 }

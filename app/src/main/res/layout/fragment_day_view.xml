@@ -3,7 +3,7 @@
     日视图 Fragment 的布局文件
     包含标题和日视图内容区域
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,6 +17,41 @@
         android:padding="16dp"
         android:text="日视图"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"/>
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</LinearLayout>
+
+    <!-- 无事件提示 -->
+    <TextView
+        android:id="@+id/noEventText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="今天暂无事件"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dayHeaderText"/>
+
+    <!-- 事件列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/eventRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dayHeaderText"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
