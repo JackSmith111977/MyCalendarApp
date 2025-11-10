@@ -8,6 +8,7 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="添加日程"
@@ -15,6 +16,13 @@
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="16dp"/>
+
+    <!-- 隐藏字段，用于存储事件ID -->
+    <TextView
+        android:id="@+id/eventIdText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
