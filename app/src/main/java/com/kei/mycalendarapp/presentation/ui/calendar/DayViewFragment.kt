@@ -318,6 +318,41 @@ class DayViewFragment: Fragment() {
      */
     private fun deleteEvent(event: CalendarEvent) {
         // 添加删除事件逻辑
+        // 创建确认对话框
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        dialogBuilder.setTitle("确认删除")
+        dialogBuilder.setMessage("确定要删除事件 \"${event.title}\" 吗？ 此操作无法撤销。")
+
+        // 设置确认按钮
+        dialogBuilder.setPositiveButton("删除"){_, _ ->
+            lifecycleScope.launch {
+                try {
+                    // 获取数据库实例
+                    val database = CalendarDatabase.getInstance(requireContext())
+                    val eventDao = database.eventDao()
+
+                    // 从数据库中删除事件
+                    eventDao.deleteEvent(event)
+
+                    // 通知事件更新
+                    EventUpdateManager.getInstance().notifyEventAdded()
+
+                    // 显示删除成功提示
+                    Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception){
+                    // 捕获异常并显示错误提示
+                    Toast.makeText(context, "删除失败：${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        // 设置取消按钮
+        dialogBuilder.setNegativeButton("取消"){dialog, _ ->
+            dialog.dismiss()
+        }
+
+        // 显示对话框
+        dialogBuilder.create().show()
     }
     
     /**
@@ -328,6 +363,23 @@ class DayViewFragment: Fragment() {
      */
     private fun toggleEventCompletion(event: CalendarEvent, isCompleted: Boolean) {
         // 添加切换事件完成状态逻辑
+        lifecycleScope.launch {
+            try {
+                val database = CalendarDatabase.getInstance(requireContext())
+                val eventDao = database.eventDao()
+
+                val updatedEvent = event.copy(isCompleted = isCompleted)
+
+                eventDao.updateEvent(updatedEvent)
+
+                // 通知事件更新
+                EventUpdateManager.getInstance().notifyEventAdded()
+                val message = if(isCompleted) "事件已完成" else "事件标记为未完成"
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            } catch (e: Exception){
+                Toast.makeText(context, "切换失败：${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     /**
