@@ -20,6 +20,7 @@ import com.kei.mycalendarapp.R
 import com.kei.mycalendarapp.data.local.CalendarDatabase
 import com.kei.mycalendarapp.data.local.entity.CalendarEvent
 import com.kei.mycalendarapp.databinding.FragmentDayViewBinding
+import com.kei.mycalendarapp.domain.manager.AlarmReminderManager
 import com.kei.mycalendarapp.domain.manager.EventUpdateManager
 import com.kei.mycalendarapp.presentation.ui.common.EventCardAdapter
 import kotlinx.coroutines.launch
@@ -265,6 +266,14 @@ class DayViewFragment: Fragment() {
                     // 更新事件到数据库
                     eventDao.updateEvent(updatedEvent)
 
+                    // 取消原有的提醒
+                    val alarmReminderManager = AlarmReminderManager(requireContext())
+                    alarmReminderManager.cancelReminder(requireContext(), event.id)
+                    // 设置新的提醒
+                    if (reminderTime > 0L){
+                        alarmReminderManager.setReminder(updatedEvent)
+                    }
+
                     // 通知事件更新 - 通知相关的观察者事件已更新
                     EventUpdateManager.getInstance().notifyEventAdded()
 
@@ -333,6 +342,10 @@ class DayViewFragment: Fragment() {
 
                     // 从数据库中删除事件
                     eventDao.deleteEvent(event)
+
+                    // 取消提醒
+                    val alarmReminderManager = AlarmReminderManager(requireContext())
+                    alarmReminderManager.cancelReminder(requireContext(), event.id)
 
                     // 通知事件更新
                     EventUpdateManager.getInstance().notifyEventAdded()
