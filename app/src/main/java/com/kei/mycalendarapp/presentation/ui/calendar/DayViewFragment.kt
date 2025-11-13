@@ -40,6 +40,7 @@ import java.util.Locale
 class DayViewFragment: Fragment() {
     private var _binding: FragmentDayViewBinding? = null
     private val binding get() = _binding!!
+    private var selectedDate: LocalDate = LocalDate.now()
 
     private lateinit var dayTitle: TextView
     private lateinit var noEventsText: TextView
@@ -105,9 +106,10 @@ class DayViewFragment: Fragment() {
     /**
      * 加载指定日期的事件
      * 触发从数据库加载事件数据的操作
+     * - 修改loadEventFromDatabase方法,以接收日期参数
      */
     private fun loadEventsForDate(){
-        loadEventFromDatabase()
+        loadEventFromDatabase(selectedDate)
     }
 
     /**
@@ -124,18 +126,19 @@ class DayViewFragment: Fragment() {
     /**
      * 从数据库加载事件数据
      * 异步查询数据库获取当天的所有事件，并更新UI显示
+     * - 修改loadEventFromDatabase方法,以接收日期参数
+     * - 更改为计算选定日期的开始和结束
      */
-    private fun loadEventFromDatabase(){
+    private fun loadEventFromDatabase(date: LocalDate){
         lifecycleScope.launch {
             try {
                 // 获取数据库实例
                 val database = CalendarDatabase.getInstance(requireContext())
                 val eventDao = database.eventDao()
 
-                // 计算当天的开始和结束日期
-                val currentDate = LocalDate.now()
-                val startOfDay = currentDate.atStartOfDay()
-                val endOfDay = currentDate.atTime(23, 59, 59)
+                // 更改为计算选定日期的开始和结束
+                val startOfDay = date.atStartOfDay()
+                val endOfDay = date.atTime(23, 59, 59)
 
                 val startTimeStamp = startOfDay.toInstant(ZoneOffset.UTC).toEpochMilli()
                 val endTimeStamp = endOfDay.toInstant(ZoneOffset.UTC).toEpochMilli()
@@ -431,6 +434,31 @@ class DayViewFragment: Fragment() {
         val currentDate = LocalDate.now()
         // 设置日视图头部显示的日期文本
         binding.dayHeaderText.text = DateTimeFormatter.ofPattern("yyyy年MM月dd日").format(currentDate)
+
+        // 添加点击监听器以打开日期选择器
+        binding.dayHeaderText.setOnClickListener {
+            showDatePickerDialog()
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        val datePicker = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                // 更新选定日期
+                selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+
+                // 更新UI显示
+                binding.dayHeaderText.text = DateTimeFormatter.ofPattern("yyyy年MM月dd日").format(selectedDate)
+
+                // 重新加载事件数据
+                loadEventsForDate()
+            },
+            selectedDate.year,
+            selectedDate.monthValue - 1,
+            selectedDate.dayOfMonth
+        )
+        datePicker.show()
     }
 
     /**
