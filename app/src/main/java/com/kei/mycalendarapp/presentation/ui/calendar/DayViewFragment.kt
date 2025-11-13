@@ -141,7 +141,7 @@ class DayViewFragment: Fragment() {
                 val endTimeStamp = endOfDay.toInstant(ZoneOffset.UTC).toEpochMilli()
 
                 // 查询数据库并获取事件
-                val events = eventDao.getEventsInRange(startTimeStamp, endTimeStamp)
+                val events = eventDao.getEventsInRangeOrderByReminder(startTimeStamp, endTimeStamp)
 
                 // 更新UI
                 updateEventList(events)

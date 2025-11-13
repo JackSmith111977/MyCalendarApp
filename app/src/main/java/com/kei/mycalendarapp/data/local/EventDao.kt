@@ -23,4 +23,7 @@ interface EventDao {
 
     @Query("SELECT * FROM calendar_events WHERE id = :eventId")
     suspend fun getEventById(eventId: Long): CalendarEvent?
+
+    @Query("SELECT * FROM calendar_events WHERE startTime BETWEEN :start And :end ORDER BY CASE WHEN reminderTime = 0 THEN 1 ELSE 0 END, reminderTime ASC")
+    suspend fun getEventsInRangeOrderByReminder(start: Long, end: Long): List<CalendarEvent>
 }
