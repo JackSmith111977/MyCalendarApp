@@ -1,15 +1,23 @@
 package com.kei.mycalendarapp.presentation.ui.calendar
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +30,8 @@ import com.kei.mycalendarapp.data.local.entity.CalendarEvent
 import com.kei.mycalendarapp.databinding.FragmentDayViewBinding
 import com.kei.mycalendarapp.domain.manager.AlarmReminderManager
 import com.kei.mycalendarapp.domain.manager.EventUpdateManager
+import com.kei.mycalendarapp.domain.manager.ExportManager
+import com.kei.mycalendarapp.domain.manager.PermissionManager
 import com.kei.mycalendarapp.presentation.ui.common.EventCardAdapter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -32,6 +42,8 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
+import androidx.core.graphics.createBitmap
+import com.kei.mycalendarapp.domain.manager.ImportManager
 
 /**
  * 日视图 Fragment
@@ -46,6 +58,10 @@ class DayViewFragment: Fragment() {
     private lateinit var noEventsText: TextView
     private lateinit var eventsRecyclerView: RecyclerView
     private lateinit var eventAdapter: EventCardAdapter
+    private lateinit var exportButton: ImageButton
+    private lateinit var exportManager: ExportManager
+    private lateinit var permissionManager: PermissionManager
+    private lateinit var importManager: ImportManager
 
     /**
      * 事件更新观察者
@@ -75,6 +91,11 @@ class DayViewFragment: Fragment() {
         dayTitle = binding.dayHeaderText
         noEventsText = binding.noEventText
         eventsRecyclerView = binding.eventRecyclerView
+        exportButton = binding.exportButton // 初始化导出按钮
+
+        // 初始化管理器
+        exportManager = ExportManager(requireContext())
+        permissionManager = PermissionManager(requireContext())
 
         return view
     }
@@ -418,12 +439,182 @@ class DayViewFragment: Fragment() {
         // 初始化 ViewModel
         val database = CalendarDatabase.getInstance(requireContext())
         val eventDao = database.eventDao()
+
+        // 初始化导入管理类
+        importManager = ImportManager(requireContext())
         
         setupRecyclerView()
         
         // 加载初始数据
         loadEventsForDate()
         setupDayView()
+
+        // 添加导出按钮点击监听器
+        exportButton.setOnClickListener {
+            showExportMenu(it)
+        }
+    }
+
+    private fun showExportMenu(anchorView: View) {
+        val popupMenu = PopupMenu(requireContext(), anchorView)
+        val menuInflater: MenuInflater = popupMenu.menuInflater
+        menuInflater.inflate(R.menu.menu_export, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.action_export_data -> {
+                    exportAsDataFile()
+                    true
+                }
+                R.id.action_export_image -> {
+                    exportAsImage()
+                    true
+                }
+                R.id.action_import_data_as_today -> {
+                    importDataFileAsToday()
+                    true
+                }
+                R.id.action_import_data_to_original_dates -> {
+                    importDataFileToOriginalDates()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+    }
+
+    private fun importDataFileToOriginalDates() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "*/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        importDataToOriginalDatesLauncher.launch(intent)
+    }
+
+    private val importDataToOriginalDatesLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){ result ->
+        if (result.resultCode == Activity.RESULT_OK){
+            val uri = result.data?.data
+            // 导入事件数据到原始日期
+            if (uri != null){
+                importManager.importEventsToOriginalDates(
+                    uri,
+                    viewLifecycleOwner.lifecycleScope,
+                    onSuccess = {
+                        // 导入成功，刷新事件列表
+                        loadEventFromDatabase(selectedDate)
+                        Toast.makeText(requireContext(), "导入成功", Toast.LENGTH_SHORT).show()
+                    },
+                    onError = { error ->
+                        Toast.makeText(requireContext(), "导入失败：$error", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    }
+
+    private fun importDataFileAsToday() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "*/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+
+        importDataLauncher.launch(intent)
+    }
+
+    private val importDataLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){result ->
+        if (result.resultCode == Activity.RESULT_OK){
+            val uri = result.data?.data
+            if(uri != null){
+                // 导入事件数据
+                importManager.importEventsFromJson(
+                    uri,
+                    selectedDate,
+                    viewLifecycleOwner.lifecycleScope,
+                    onSuccess = {
+                        // 导入成功，刷新事件列表
+                        loadEventFromDatabase(selectedDate)
+                        Toast.makeText(requireContext(), "导入成功", Toast.LENGTH_SHORT).show()
+                    },
+                    onError = { error ->
+                        Toast.makeText(requireContext(), "导入失败：$error", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    }
+
+    private val createDataFileLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val uri = result.data?.data
+            if (uri != null) {
+                // 获取事件数据并保存到文件
+                exportManager.getEventsDataAsJson(
+                    selectedDate,
+                    lifecycleScope,
+                    onSuccess = { data ->
+                        try {
+                            requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
+                                outputStream.write(data)
+                            }
+                            Toast.makeText(requireContext(), "事件数据已保存", Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "保存失败：${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onError = { error ->
+                        Toast.makeText(requireContext(), "导出失败：$error", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    }
+
+    private val createImageFileLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val uri = result.data?.data
+            if (uri != null) {
+                // 创建截图并保存到文件
+                val bitmap = exportManager.takeScreenshot(binding.eventRecyclerView)
+                val imageData = exportManager.convertBitmapToPngByteArray(bitmap)
+
+                try {
+                    requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        outputStream.write(imageData)
+                    }
+                    Toast.makeText(requireContext(), "截图已保存", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "保存失败：${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun exportAsDataFile() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, "calendar_events_${selectedDate}.json")
+        }
+        createDataFileLauncher.launch(intent)
+    }
+
+    private fun exportAsImage() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/png"
+            putExtra(Intent.EXTRA_TITLE, "calendar_screenshot_${selectedDate}.png")
+        }
+        createImageFileLauncher.launch(intent)
     }
 
     /**

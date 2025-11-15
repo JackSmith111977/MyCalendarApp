@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_export_data"
+        android:title="导出为数据文件" />
+
+    <item
+        android:id="@+id/action_export_image"
+        android:title="导出为图片" />
+
+    <item
+        android:id="@+id/action_import_data_as_today"
+        android:title="导入数据为当天日程"/>
+
+    <item
+        android:id="@+id/action_import_data_to_original_dates"
+        android:title="导入数据为默认日程"/>
+</menu>
