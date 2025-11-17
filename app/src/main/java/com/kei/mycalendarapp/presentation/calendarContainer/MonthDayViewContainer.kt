@@ -16,6 +16,7 @@ class MonthDayViewContainer(view: View) : ViewContainer(view) {
      * 日期格子中显示日期数字的 TextView
      */
     val textView: TextView = view.findViewById(com.kei.mycalendarapp.R.id.calendarDayText)
+    val lunarTextView: TextView = view.findViewById(com.kei.mycalendarapp.R.id.calendarLunarText)
     
     // 添加一个函数来设置点击监听器
     fun setOnClickListener(listener: (View) -> Unit) {

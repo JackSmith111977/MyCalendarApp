@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="8">
 
     <!-- 添加年月标题 -->
     <TextView
@@ -30,8 +31,23 @@
     <com.kizitonwose.calendar.view.WeekCalendarView
         android:id="@+id/week_calendar_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:cv_dayViewResource="@layout/calendar_day_layout"
         app:cv_scrollPaged="true"/>
+
+    <!-- 模块选择栏 -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/moduleTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="fixed"
+        app:tabGravity="fill"/>
+
+    <!-- 模块内容显示区域 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/moduleViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
 
 </LinearLayout>

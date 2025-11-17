@@ -1,22 +1,25 @@
-package com.kei.mycalendarapp.presentation.ui.calendar
+package com.kei.mycalendarapp.presentation.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kei.mycalendarapp.R
 import com.kei.mycalendarapp.databinding.FragmentWeekViewBinding
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
-import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kei.mycalendarapp.presentation.calendarBinder.WeekViewBinder
+import com.kei.mycalendarapp.presentation.ui.adapter.ModulePagerAdapter
+import com.kei.mycalendarapp.presentation.viewmodel.SharedViewModel
 import com.kizitonwose.calendar.core.daysOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -32,8 +35,18 @@ class WeekViewFragment: Fragment() {
     private var _binding: FragmentWeekViewBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var moduleAdapter: ModulePagerAdapter
+
     // 添加年月标题变量声明
     private lateinit var monthYearHeader: TextView
+    private lateinit var moduleTabLayout: TabLayout
+    private lateinit var moduleViewPager: ViewPager2
+    private lateinit var sharedViewModel: SharedViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+    }
 
     /**
      * 创建 Fragment 的视图层次结构
@@ -62,6 +75,25 @@ class WeekViewFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupWeekView()
+        setupModuleSection()
+    }
+
+    private fun setupModuleSection() {
+        moduleTabLayout = binding.root.findViewById(R.id.moduleTabLayout)
+        moduleViewPager = binding.root.findViewById(R.id.moduleViewPager)
+
+        // 设置viewPager
+        moduleAdapter = ModulePagerAdapter(requireActivity())
+        moduleViewPager.adapter = moduleAdapter
+
+        // 关联 TabLayout 和 ViewPager
+        TabLayoutMediator(moduleTabLayout, moduleViewPager){ tab, position ->
+            when(position){
+                0 -> {
+                    tab.text = "节日"
+                }
+            }
+        }.attach()
     }
 
     /**
@@ -83,6 +115,10 @@ class WeekViewFragment: Fragment() {
             weekViewBinder.selectDate(weekDay.date)
             // 通知日历重新绘制以更新选中状态
             binding.weekCalendarView.notifyCalendarChanged()
+
+            // 通过ViewModel更新选中的日期
+            sharedViewModel.setSelectedDate(weekDay.date)
+            Log.d("WeekViewFragment", "Clicked: ${weekDay.date}")
         }
         
         val weekCalendarView = binding.weekCalendarView

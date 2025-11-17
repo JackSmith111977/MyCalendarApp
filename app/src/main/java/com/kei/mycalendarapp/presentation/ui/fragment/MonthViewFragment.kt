@@ -1,4 +1,4 @@
-package com.kei.mycalendarapp.presentation.ui.calendar
+package com.kei.mycalendarapp.presentation.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

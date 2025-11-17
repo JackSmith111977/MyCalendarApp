@@ -1,11 +1,11 @@
-package com.kei.mycalendarapp.presentation.ui.common
+package com.kei.mycalendarapp.presentation.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.kei.mycalendarapp.presentation.ui.calendar.DayViewFragment
-import com.kei.mycalendarapp.presentation.ui.calendar.MonthViewFragment
-import com.kei.mycalendarapp.presentation.ui.calendar.WeekViewFragment
+import com.kei.mycalendarapp.presentation.ui.fragment.DayViewFragment
+import com.kei.mycalendarapp.presentation.ui.fragment.MonthViewFragment
+import com.kei.mycalendarapp.presentation.ui.fragment.WeekViewFragment
 
 /**
  * 日历视图的 ViewPager 适配器

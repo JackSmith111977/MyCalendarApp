@@ -6,6 +6,7 @@ import com.kei.mycalendarapp.R
 import com.kei.mycalendarapp.presentation.calendarContainer.DayViewContainer
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.WeekDayBinder
+import com.xhinliang.lunarcalendar.LunarCalendar
 import java.time.LocalDate
 
 /**
@@ -40,6 +41,15 @@ class WeekViewBinder: WeekDayBinder<DayViewContainer> {
     ) {
         container.textView.text = data.date.dayOfMonth.toString()
 
+        // 设置农历信息
+        val lunarText = getLunarText(data.date)
+        container.lunarTextView.text = lunarText
+        // 设置农历文本样式
+        container.lunarTextView.textSize = 12f
+        container.lunarTextView.setTextColor(Color.GRAY)
+        container.lunarTextView.alpha = 0.8f // 设置半透明效果
+
+
         // 设置点击监听器
         container.setOnClickListener {
             selectedDate = data.date
@@ -64,6 +74,15 @@ class WeekViewBinder: WeekDayBinder<DayViewContainer> {
             container.textView.setBackgroundResource(R.drawable.modern_today_background)
             container.textView.setTextColor(Color.BLACK)
         }
+    }
+
+    private fun getLunarText(date: LocalDate): String? {
+        val lunarCalendar = LunarCalendar.obtainCalendar(
+            date.year,
+            date.monthValue,
+            date.dayOfMonth
+        )
+        return lunarCalendar.lunarDay
     }
 
     fun getSelectedDate(): LocalDate?{

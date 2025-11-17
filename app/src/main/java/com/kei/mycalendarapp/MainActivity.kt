@@ -1,16 +1,11 @@
 package com.kei.mycalendarapp
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -18,10 +13,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.kei.mycalendarapp.data.local.CalendarDatabase
@@ -30,10 +21,10 @@ import com.kei.mycalendarapp.databinding.ActivityMainBinding
 import com.kei.mycalendarapp.domain.manager.AlarmReminderManager
 import com.kei.mycalendarapp.domain.manager.EventColorManager
 import com.kei.mycalendarapp.domain.manager.EventUpdateManager
-import com.kei.mycalendarapp.presentation.ui.calendar.DayViewFragment
-import com.kei.mycalendarapp.presentation.ui.calendar.MonthViewFragment
-import com.kei.mycalendarapp.presentation.ui.calendar.WeekViewFragment
-import com.kei.mycalendarapp.presentation.ui.common.CalendarViewPagerAdapter
+import com.kei.mycalendarapp.presentation.ui.fragment.DayViewFragment
+import com.kei.mycalendarapp.presentation.ui.fragment.MonthViewFragment
+import com.kei.mycalendarapp.presentation.ui.fragment.WeekViewFragment
+import com.kei.mycalendarapp.presentation.ui.adapter.CalendarViewPagerAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -43,7 +34,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import androidx.core.net.toUri
 import com.kei.mycalendarapp.domain.manager.PermissionManager
 
 /**

@@ -7,6 +7,7 @@ import com.kei.mycalendarapp.presentation.calendarContainer.MonthDayViewContaine
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.view.MonthDayBinder
+import com.xhinliang.lunarcalendar.LunarCalendar
 import java.time.LocalDate
 import java.time.MonthDay
 
@@ -40,6 +41,15 @@ class MonthDayViewBinder : MonthDayBinder<MonthDayViewContainer> {
     override fun bind(container: MonthDayViewContainer, data: CalendarDay) {
         // 步骤2：在Binder中设置点击监听器
         container.textView.text = data.date.dayOfMonth.toString()
+
+        // 设置农历信息
+        val lunarText = getLunarText(data.date)
+        container.lunarTextView.text = lunarText
+        // 设置农历文本样式
+        container.lunarTextView.textSize = 12f
+        container.lunarTextView.setTextColor(Color.GRAY)
+        container.lunarTextView.alpha = 0.8f // 设置半透明效果
+
 
         // 设置点击监听器
         container.setOnClickListener {
@@ -80,6 +90,15 @@ class MonthDayViewBinder : MonthDayBinder<MonthDayViewContainer> {
         } else {
             container.textView.alpha = 0.3f
         }
+    }
+
+    private fun getLunarText(date: LocalDate): String? {
+        val lunarCalendar = LunarCalendar.obtainCalendar(
+            date.year,
+            date.monthValue,
+            date.dayOfMonth
+        )
+        return lunarCalendar.lunarDay
     }
 
     fun getSelectedDate(): LocalDate?{

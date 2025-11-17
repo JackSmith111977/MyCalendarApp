@@ -16,6 +16,7 @@ class DayViewContainer(view: View) : ViewContainer(view) {
      * 日期格子中显示日期数字的 TextView
      */
     val textView: TextView = view.findViewById<TextView>(R.id.calendarDayText)
+    val lunarTextView: TextView = view.findViewById(R.id.calendarLunarText)
     
     // 添加一个函数来设置点击监听器
     // lambda表达式，即接收一个名为listener的参数，是以View作为参数，并返回Unit(即无返回值)的函数类型

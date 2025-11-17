@@ -1,12 +1,10 @@
-package com.kei.mycalendarapp.presentation.ui.calendar
+package com.kei.mycalendarapp.presentation.ui.fragment
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuInflater
@@ -32,7 +30,7 @@ import com.kei.mycalendarapp.domain.manager.AlarmReminderManager
 import com.kei.mycalendarapp.domain.manager.EventUpdateManager
 import com.kei.mycalendarapp.domain.manager.ExportManager
 import com.kei.mycalendarapp.domain.manager.PermissionManager
-import com.kei.mycalendarapp.presentation.ui.common.EventCardAdapter
+import com.kei.mycalendarapp.presentation.ui.adapter.EventCardAdapter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -42,7 +40,6 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
-import androidx.core.graphics.createBitmap
 import com.kei.mycalendarapp.domain.manager.ImportManager
 
 /**
