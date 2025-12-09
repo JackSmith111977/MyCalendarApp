@@ -11,4 +11,6 @@
     <color name="magenta_500">#E91E63</color>
     <color name="magenta_700">#C2185B</color>
     <color name="magenta_200">#F48FB1</color>
+    <!-- 日历图标背景色：米白色 -->
+    <color name="ic_launcher_background">#FEF8F6</color>
 </resources>

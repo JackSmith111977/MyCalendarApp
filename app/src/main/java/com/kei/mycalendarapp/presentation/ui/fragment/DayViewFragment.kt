@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
@@ -163,14 +164,14 @@ class DayViewFragment: Fragment() {
                 val eventDao = database.eventDao()
 
                 // 更改为计算选定日期的开始和结束
-                val startOfDay = date.atStartOfDay()
-                val endOfDay = date.atTime(23, 59, 59)
+                val startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                val endOfDay = date.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-                val startTimeStamp = startOfDay.toInstant(ZoneOffset.UTC).toEpochMilli()
-                val endTimeStamp = endOfDay.toInstant(ZoneOffset.UTC).toEpochMilli()
+                Log.d("DayViewFragment", "在 $date 中获取事件")
+                Log.d("DayViewFragment", "开始时间: $startOfDay, 结束时间: $endOfDay")
 
                 // 查询数据库并获取事件
-                val events = eventDao.getEventsInRangeOrderByReminder(startTimeStamp, endTimeStamp)
+                val events = eventDao.getEventsInRangeOrderByReminder(startOfDay, endOfDay)
 
                 // 更新UI
                 updateEventList(events)
