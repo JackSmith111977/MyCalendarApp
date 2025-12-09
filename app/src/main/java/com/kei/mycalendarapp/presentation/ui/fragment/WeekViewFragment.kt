@@ -92,6 +92,9 @@ class WeekViewFragment: Fragment() {
                 0 -> {
                     tab.text = "节日"
                 }
+                1 -> {
+                    tab.text = "动画"
+                }
             }
         }.attach()
     }

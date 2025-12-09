@@ -93,4 +93,5 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.lunarcalendar)
     implementation(libs.okhttp)
+    implementation(libs.glide)
 }

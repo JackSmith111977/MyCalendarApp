@@ -3,6 +3,7 @@ package com.kei.mycalendarapp.presentation.ui.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.kei.mycalendarapp.presentation.ui.fragment.AnimeScheduleFragment
 import com.kei.mycalendarapp.presentation.ui.fragment.TodayFestivalFragment
 import com.kei.mycalendarapp.presentation.ui.fragment.WeekViewFragment
 import java.time.LocalDate
@@ -20,7 +21,7 @@ class ModulePagerAdapter(fragmentActivity: FragmentActivity, private var current
      *
      * @return 模块数量
      */
-    override fun getItemCount(): Int = 1
+    override fun getItemCount(): Int = 2
 
     /**
      * 创建指定位置的Fragment
@@ -31,6 +32,7 @@ class ModulePagerAdapter(fragmentActivity: FragmentActivity, private var current
     override fun createFragment(position: Int): Fragment {
         return when(position){
             0 -> TodayFestivalFragment.newInstance(currentDate)
+            1 -> AnimeScheduleFragment.newInstance(currentDate)
             else -> TodayFestivalFragment.newInstance(currentDate)
         }
     }

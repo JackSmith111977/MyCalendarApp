@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import com.kei.mycalendarapp.domain.manager.ImportManager
+import com.kei.mycalendarapp.presentation.viewmodel.SharedViewModel
 
 /**
  * 日视图 Fragment
@@ -59,6 +61,12 @@ class DayViewFragment: Fragment() {
     private lateinit var exportManager: ExportManager
     private lateinit var permissionManager: PermissionManager
     private lateinit var importManager: ImportManager
+    private lateinit var sharedViewModel: SharedViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+    }
 
     /**
      * 事件更新观察者
@@ -431,6 +439,12 @@ class DayViewFragment: Fragment() {
             viewLifecycleOwner,
             eventUpdateObserver
         )
+
+        sharedViewModel.newEventAdded.observe(viewLifecycleOwner){ date ->
+            selectedDate = date
+            binding.dayHeaderText.text = DateTimeFormatter.ofPattern("yyyy年MM月dd日").format(selectedDate)
+            loadEventsForDate()
+        }
 
         
         // 初始化 ViewModel

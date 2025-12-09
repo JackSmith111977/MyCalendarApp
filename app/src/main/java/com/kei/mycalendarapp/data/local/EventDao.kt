@@ -26,4 +26,7 @@ interface EventDao {
 
     @Query("SELECT * FROM calendar_events WHERE startTime BETWEEN :start And :end ORDER BY CASE WHEN reminderTime = 0 THEN 1 ELSE 0 END, reminderTime ASC")
     suspend fun getEventsInRangeOrderByReminder(start: Long, end: Long): List<CalendarEvent>
+
+    @Query("SELECT COUNT(*) FROM calendar_events WHERE title = :title AND startTime >= :startTime AND startTime <= :endTime")
+    suspend fun getEventCountByTitleAndDate(title: String, startTime: Long, endTime: Long): Int
 }

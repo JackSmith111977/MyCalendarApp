@@ -84,20 +84,18 @@ class TodayFestivalFragment: Fragment() {
                     return@runOnUiThread
                 }
 
-                if(response?.holiday != null){
+                if(response.holiday != null){
                     // 是节日
                     festivals.add(response.holiday.name)
-                }else if (response?.type != null){
+                }else {
                     // 不是节日
                     if (response.type.type == 1){
                         // 周末
                         festivals.add(response.type.name)
                     }else{
                         // 工作日
-                        festivals.add("今天是${response.type.name}")
+                        festivals.add(response.type.name)
                     }
-                }else{
-                    festivals.add("无法获取节日信息")
                 }
 
                 festivalAdapter?.updateFestivals(festivals)
