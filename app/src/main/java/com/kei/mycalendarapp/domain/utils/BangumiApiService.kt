@@ -1,10 +1,12 @@
 package com.kei.mycalendarapp.domain.utils
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.kei.mycalendarapp.data.local.entity.BangumiItem
 import com.kei.mycalendarapp.data.local.entity.BangumiResponse
+import com.kei.mycalendarapp.domain.utils.CacheManager
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -14,9 +16,13 @@ import okio.IOException
 import java.time.LocalDate
 
 class BangumiApiService {
-    private val client = OkHttpClient()
+    private var client = OkHttpClient()
     private val gson = Gson()
     private val TAG = "BangumiApiService"
+
+    constructor(context: Context){
+        client = CacheManager.getInstance(context).okHttpClient
+    }
 
     fun getBangumiCalendar(callback: (List<BangumiResponse>?) -> Unit){
         val url = "https://api.bgm.tv/calendar"

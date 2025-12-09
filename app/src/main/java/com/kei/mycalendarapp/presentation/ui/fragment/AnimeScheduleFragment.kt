@@ -76,7 +76,7 @@ class AnimeScheduleFragment: Fragment() {
         }
         recyclerView.adapter = animeAdapter
 
-        bangumiApiService = BangumiApiService()
+        bangumiApiService = BangumiApiService(requireContext())
 
         currentDate?.let { loadAnimeForDate(it) } ?: loadAnimeForDate(LocalDate.now())
         return view

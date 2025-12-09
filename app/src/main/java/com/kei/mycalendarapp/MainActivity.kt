@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         // 检查并请求权限
         checkAndRequestPermissions()
 
-        Log.e("权限状态", checkAlarmPermissionStatus())
+        Log.d("权限状态", checkAlarmPermissionStatus())
 
     }
 

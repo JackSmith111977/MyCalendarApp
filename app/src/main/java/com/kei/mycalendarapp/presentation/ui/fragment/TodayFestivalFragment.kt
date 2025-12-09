@@ -63,7 +63,7 @@ class TodayFestivalFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         festivalAdapter = FestivalAdapter(emptyList())
         recyclerView.adapter = festivalAdapter
-        holidayApiService = HolidayApiService()
+        holidayApiService = HolidayApiService(requireContext())
 
         currentDate?.let { updateFestivalsForDate(it) } ?:updateFestivalsForDate(LocalDate.now())
 

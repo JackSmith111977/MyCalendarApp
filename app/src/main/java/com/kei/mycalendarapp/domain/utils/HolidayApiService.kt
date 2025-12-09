@@ -1,8 +1,11 @@
 package com.kei.mycalendarapp.domain.utils
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.kei.mycalendarapp.data.local.entity.HolidayResponse
+import com.kei.mycalendarapp.domain.utils.CacheManager
+import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -14,8 +17,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class HolidayApiService {
-    private val client = OkHttpClient()
+    private var client = OkHttpClient()
     private val gson = Gson()
+
+    constructor(context: Context){
+        client = CacheManager.getInstance(context).okHttpClient
+    }
 
     fun getHolidayInfo(date: LocalDate, callback: (HolidayResponse?) -> Unit){
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
