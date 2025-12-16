@@ -51,7 +51,7 @@
 ## Screenshots
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="docs/screenshots/day_view.png" alt="月视图" width="200">
+  <img src="docs/screenshots/month_view.png" alt="月视图" width="200">
   <img src="docs/screenshots/week_view.png" alt="周视图" width="200">
   <img src="docs/screenshots/day_view.png" alt="日视图" width="200">
   <img src="docs/screenshots/anime_schedule.png" alt="番剧时间表" width="200">
