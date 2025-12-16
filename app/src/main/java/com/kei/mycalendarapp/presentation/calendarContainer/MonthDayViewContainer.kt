@@ -1,6 +1,7 @@
 package com.kei.mycalendarapp.presentation.calendarContainer
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.kei.mycalendarapp.R
 import com.kizitonwose.calendar.view.ViewContainer
@@ -17,6 +18,7 @@ class MonthDayViewContainer(view: View) : ViewContainer(view) {
      */
     val textView: TextView = view.findViewById(com.kei.mycalendarapp.R.id.calendarDayText)
     val lunarTextView: TextView = view.findViewById(com.kei.mycalendarapp.R.id.calendarLunarText)
+    val eventIndicator: ImageView = view.findViewById(R.id.eventIndicator)
     
     // 添加一个函数来设置点击监听器
     fun setOnClickListener(listener: (View) -> Unit) {
