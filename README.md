@@ -51,7 +51,7 @@
 ## Screenshots
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="docs/screenshots/month_view.png" alt="月视图" width="200">
+  <img src="docs/screenshots/day_view.png" alt="月视图" width="200">
   <img src="docs/screenshots/week_view.png" alt="周视图" width="200">
   <img src="docs/screenshots/day_view.png" alt="日视图" width="200">
   <img src="docs/screenshots/anime_schedule.png" alt="番剧时间表" width="200">
@@ -100,20 +100,22 @@
 
 本项目遵循组件化开发原则，采用 MVVM 架构模式：
 
-app/ <br> 
-├── data/ # 数据层 <br>
-│ ├── local/ # 本地数据（Room 数据库） <br>
-│ └── network/ # 网络相关（缓存管理） <br>
-├── domain/ # 领域层 <br> 
-│ ├── manager/ # 业务管理器 <br>
-│ └── utils/ # 工具类 <br>
-├── presentation/ # 表示层 <br>
-│ ├── adapter/ # RecyclerView 适配器 <br>
-│ ├── binder/ # 日历视图绑定器 <br>
-│ ├── container/ # 日历容器 <br>
-│ ├── ui/ # UI 组件（Fragment、Activity） <br>
-│ └── viewmodel/ # ViewModel └── ui/ # 主题相关 <br>
-└── ui/ # 主题相关 <br>
+~~~bash
+app/ 
+├── data/ # 数据层 
+│ ├── local/ # 本地数据（Room 数据库） 
+│ └── network/ # 网络相关（缓存管理） 
+├── domain/ # 领域层 
+│ ├── manager/ # 业务管理器 
+│ └── utils/ # 工具类 
+├── presentation/ # 表示层 
+│ ├── adapter/ # RecyclerView 适配器 
+│ ├── binder/ # 日历视图绑定器 
+│ ├── container/ # 日历容器 
+│ ├── ui/ # UI 组件（Fragment、Activity） 
+│ └── viewmodel/ # ViewModel └── ui/ # 主题相关 
+└── ui/ # 主题相关 
+~~~
 
 ### 软件架构图
 
