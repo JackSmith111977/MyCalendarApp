@@ -99,6 +99,94 @@ app/ <br>
 │ └── viewmodel/ # ViewModel └── ui/ # 主题相关 <br>
 └── ui/ # 主题相关 <br>
 
+### 软件架构图
+
+```mermaid
+graph TD
+    A[MainActivity] --> B[ViewPager2]
+    A --> C[SharedViewModel]
+    B --> D[MonthViewFragment]
+    B --> E[WeekViewFragment]
+    B --> F[DayViewFragment]
+    
+    D --> G[KizitoNwose CalendarView]
+    E --> H[KizitoNwose WeekCalendarView]
+    F --> I[EventCardAdapter]
+    F --> J[RecyclerView]
+    
+    G --> K[MonthDayViewBinder]
+    H --> L[WeekViewBinder]
+    
+    K --> M[MonthDayViewContainer]
+    L --> N[DayViewContainer]
+    
+    F --> O[CalendarDatabase]
+    D --> O
+    E --> O
+    
+    O --> P[EventDao]
+    P --> Q[CalendarEvent]
+    
+    F --> R[AlarmReminderManager]
+    R --> S[ReminderReceiver]
+    
+    E --> T[ModulePagerAdapter]
+    T --> U[TodayFestivalFragment]
+    T --> V[AnimeScheduleFragment]
+    
+    V --> W[BangumiApiService]
+    U --> X[HolidayApiService]
+    
+    W --> Y[CacheManager]
+    X --> Y
+    
+    Y --> Z[OkHttpClient]
+    
+    C --> D
+    C --> E
+    C --> F
+    C --> U
+    C --> V
+    
+    subgraph 数据层
+        O
+        P
+        Q
+    end
+    
+    subgraph 网络层
+        W
+        X
+        Y
+        Z
+    end
+    
+    subgraph 表示层
+        D
+        E
+        F
+        G
+        H
+        I
+        J
+        K
+        L
+        M
+        N
+        T
+        U
+        V
+    end
+    
+    subgraph 公共层
+        A
+        B
+        C
+        R
+        S
+    end
+```
+
 ### 核心组件
 
 1. **Calendar Views**
@@ -137,4 +225,3 @@ app/ <br>
 版权所有 © 2025 Kei
 
 本项目仅供学习交流使用。
-
